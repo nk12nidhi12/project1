@@ -1,8 +1,19 @@
 const Listing = require("../models/listing")
 
 module.exports.index = async (req, res) => {
-    const allListings = await Listing.find({})
-    res.render('listings/index.ejs', { allListings })
+    const page = parseInt(req.query.page) || 1;
+    const limit = 12;
+    const skip = (page - 1) * limit;
+
+    const totalListings = await Listing.countDocuments();
+    const allListings = await Listing.find()
+        .skip(skip)
+        .limit(limit)
+        .sort({ createdAt: -1 });
+
+    const totalPages = Math.ceil(totalListings / limit);
+
+    res.render('listings/index.ejs', { allListings, page, totalPages });
 }
 
 module.exports.renderNewForm = (req, res) => {
@@ -24,7 +35,6 @@ module.exports.showListing = async (req, res) => {
 }
 
 module.exports.createListing = async (req, res, next) => {
-    //  let {title, description, image, price, location, country} = req.body;
     let url = req.file.path;
     let filename = req.file.filename;
     const newListing = new Listing(req.body.listing)
@@ -48,9 +58,6 @@ module.exports.renderEditForm = async (req, res) => {
 } 
 
 module.exports.updateListing = async (req, res) => {
-    // if(!req.body.listing){{
-    //     throw new ExpressError(400, "Send valid data for listing");
-    // }}
     let { id } = req.params
     const listing = await Listing.findByIdAndUpdate(id, { ...req.body.listing });
 

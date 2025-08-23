@@ -40,83 +40,63 @@
 </style>
 
 <div id="filters" class="mb-3">
-    <!-- <div class="filter">
-        <div><i class="fa-solid fa-fire"></i></div>
-        <p>Trending</p>
-    </div>
-    <div class="filter">
-        <div><i class="fa-solid fa-bed"></i></div>
-        <p>Rooms</p>
-    </div>
-    <div class="filter">
-        <div><i class="fa-solid fa-mountain-city"></i></div>
-        <p>Iconic Cities</p>
-    </div>
-    <div class="filter">
-        <div><i class="fa-solid fa-mountain"></i></div>
-        <p>Mountains</p>
-    </div>
-    <div class="filter">
-        <div><i class="fa-solid fa-chess-rook"></i></div>
-        <p>Castles</p>
-    </div>
-    <div class="filter">
-        <div><i class="fa-solid fa-person-swimming"></i></div>
-        <p>Amazing Pools</p>
-    </div>
-    <div class="filter">
-        <div><i class="fa-solid fa-campground"></i></div>
-        <p>Camping</p>
-    </div>
-    <div class="filter">
-        <div><i class="fa-solid fa-wheat-awn"></i></div>
-        <p>Farms</p>
-    </div>
-    <div class="filter">
-        <div><i class="fa-solid fa-snowflake"></i></div>
-        <p>Arctic</p>
-    </div> -->
-
     <div class="tax-toggle ms-auto">
         <div class="form-check form-switch form-check-reverse">
             <label class="form-check-label" for="switchCheckReverse">Display total after taxes</label>
             <input class="form-check-input" type="checkbox" id="switchCheckReverse">
         </div>
     </div>
-
 </div>
 
 <div class="row row-cols-lg-3 row-cols-md-2 row-cols-sm-1 row-cols-xs-1 mt-3"> 
-    <!--row-cols-lg-3(minimum 3 cards to be displayed, if extra space extra card will be added)-->
-    <%for(let listing of allListings){%>
-        <a href="/listings/<%= listing._id%>" class="listing-link">
+    <% for(let listing of allListings) { %>
+        <a href="/listings/<%= listing._id %>" class="listing-link">
             <div class="card col listing-card">
-                <img src="<%= listing.image.url%>" class="card-img-top" alt="Listing image" style="height:20rem";> 
+                <img src="<%= listing.image.url %>" class="card-img-top" alt="Listing image" style="height:20rem";> 
 
                 <div class="card-img-overlay"></div>
 
                 <div class="card-body">
-                <p class="card-text">
-                    <b><%= listing.title %></b> <br>
-                    &#8377;<%= listing.price.toLocaleString("en-IN")%> / night
-                    <i class="tax-info"> +18% GST</i>
-                </p>
+                    <p class="card-text">
+                        <b><%= listing.title %></b> <br>
+                        &#8377;<%= listing.price.toLocaleString("en-IN") %> / night
+                        <i class="tax-info"> +18% GST</i>
+                    </p>
                 </div>  
             </div>
         </a>
-    <%}%>
+    <% } %>
 </div>
+
+<!-- Pagination -->
+<nav aria-label="Page navigation">
+  <ul class="pagination justify-content-center mt-3">
+    <% if(page > 1){ %>
+      <li class="page-item">
+        <a class="page-link" href="/listings?page=<%= page-1 %>">Previous</a>
+      </li>
+    <% } %>
+
+    <% for(let i = 1; i <= totalPages; i++){ %>
+      <li class="page-item <%= page === i ? 'active' : '' %>">
+        <a class="page-link" href="/listings?page=<%= i %>"><%= i %></a>
+      </li>
+    <% } %>
+
+    <% if(page < totalPages){ %>
+      <li class="page-item">
+        <a class="page-link" href="/listings?page=<%= page+1 %>">Next</a>
+      </li>
+    <% } %>
+  </ul>
+</nav>
 
 <script>
     let taxSwitch = document.getElementById("switchCheckReverse");
-    taxSwitch.addEventListener("click",()=>{
+    taxSwitch.addEventListener("click", () => {
         let taxInfo = document.getElementsByClassName("tax-info");
-        for(info of taxInfo){
-            if(info.style.display !== "inline")
-                info.style.display="inline";
-
-            else
-                info.style.display="none";
+        for(let info of taxInfo){
+            info.style.display = (info.style.display !== "inline") ? "inline" : "none";
         }
     });
 </script>
