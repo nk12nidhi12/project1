@@ -31,16 +31,19 @@ app.use(methodOverride('_method'))
 app.engine('ejs', ejsMate)
 
 const dbUrl = process.env.ATLASDB_URL;
+// Database Connection First
 main()
-    .then(() => {
-        console.log('Connected to DB')
-    })
-    .catch(err => {
-        console.log('Database not connected', err)
-    })
-async function main() {
-    await mongoose.connect(dbUrl)
-}
+  .then(() => {
+    console.log("Connected to DB");
+    
+    // App starts ONLY after DB connects
+    app.listen(process.env.PORT || 8000, () => {
+      console.log("Server is listening");
+    });
+  })
+  .catch((err) => {
+    console.log("Database connection failed!", err);
+  });
 
 const store = MongoStore.create({
     mongoUrl: dbUrl,
