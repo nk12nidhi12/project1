@@ -108,6 +108,3 @@ app.use((err, req, res, next) => {
     res.status(statusCode).render('error.ejs', { message })
 })
 
-app.listen(8000, () => {
-    console.log('App is running on port 8000')
-})
