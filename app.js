@@ -32,6 +32,9 @@ app.engine('ejs', ejsMate)
 
 const dbUrl = process.env.ATLASDB_URL;
 // Database Connection First
+async function main() {
+    await mongoose.connect(dbUrl);
+}
 main()
   .then(() => {
     console.log("Connected to DB");
